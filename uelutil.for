@@ -83,7 +83,7 @@ C     and loops around all Gauss points.
 
 C       Computes B matrix.
 
-        CALL STDM9(JELEM,NNODE,NDOFEL,NTENS,COORDS,MCRD,B,DDET,RII,SII,
+        CALL STDM9(NNODE,NDOFEL,NTENS,COORDS,MCRD,B,DDET,RII,SII,
      1             XBAR)
         SMT=SMT+RO*DDET*XBAR*ALF
 
@@ -432,7 +432,7 @@ C     and loops around all Gauss points.
 
 C       Computes B and mass matrix.
 
-        CALL STDM9(JELEM,NNODE,NDOFEL,NTENS,COORDS,MCRD,B,DDET,RII,SII,
+        CALL STDM9(NNODE,NDOFEL,NTENS,COORDS,MCRD,B,DDET,RII,SII,
      1             XBAR)
         SMT=SMT+RO*DDET*XBAR*ALF
 
@@ -590,7 +590,7 @@ C       Clears arrays for new Gauss point
         CALL CLEAR(DDSDDE,NTENS,NTENS)
         CALL CLEAR(FRST1,NDOFEL,NDOFEL)
         CALL CLEAR(FRST2,NDOFEL,NDOFEL)
-C
+
       END DO
 
 C     Computes the contribution -Kij*Uj-MII*Ai-alpha*Kij*Vj.....
@@ -771,9 +771,10 @@ C     Parameter arrays from UEL.f
      3          XGP(6),WGP(6),DDSDDET(2,2), DAUX(2,2),AUX(2,6),
      4          AUXT(6,2),RL(6,6),RLL(6,2),RM(2,2),RMT(2,2),A(NDOFEL)
 
-      CALL CLEARV(RHS,NDOFEL)
-      CALL CLEARV(ANMASS,NDOFEL)
-      CALL CLEAR(AMATRX,NDOFEL,NDOFEL)
+C     CALL CLEARV(RHS,NDOFEL)
+C     CALL CLEARV(ANMASS,NDOFEL)
+C     CALL CLEAR(AMATRX,NDOFEL,NDOFEL)
+      AMATRX=0.0D0
 
 C     Wave propagation velocities
 
@@ -810,8 +811,8 @@ C     Constitutive tensor
       CALL MMULT(DAUX,2,2,RM,2,2,DDSDDET)
 
       CALL GAUSS1D(XGP,WGP)
-      CALL CLEAR(RL,6,6)
-      CALL CLEAR(RLL,6,6)
+C     CALL CLEAR(RL,6,6)
+C     CALL CLEAR(RLL,6,6)
 
       DO N=1,6
         ETA =XGP(N)
@@ -822,7 +823,7 @@ C     Constitutive tensor
         CALL MTRAN(AUXT,6,2,AUX)
         CALL MMULT(RLL,6,2,AUX,2,6,RL)
         AMATRX=AMATRX-RL*ALF*DETJAC
-        CALL CLEAR(RL,NDOFEL,NDOFEL)
+C       CALL CLEAR(RL,NDOFEL,NDOFEL)
       END DO
 
       CALL MAVEC(AMATRX,NDOFEL,NDOFEL,V,RHS)
@@ -859,9 +860,10 @@ C     Parameter arrays from UEL.f
      3          XGP(4),WGP(4),DDSDDET(2,2), DAUX(2,2),AUX(2,4),
      4          AUXT(4,2),RL(4,4),RLL(4,2),RM(2,2),RMT(2,2),A(NDOFEL)
 
-      CALL CLEARV(RHS,NDOFEL)
-      CALL CLEARV(ANMASS,NDOFEL)
-      CALL CLEAR(AMATRX,NDOFEL,NDOFEL)
+C     CALL CLEARV(RHS,NDOFEL)
+C     CALL CLEARV(ANMASS,NDOFEL)
+C     CALL CLEAR(AMATRX,NDOFEL,NDOFEL)
+      AMATRX=0.0D0
 
 C     Wave propagation velocities
 
@@ -898,8 +900,8 @@ C     Constitutive tensor
       CALL MMULT(DAUX,2,2,RM,2,2,DDSDDET)
 
       CALL GAUSS1D(XGP,WGP)
-      CALL CLEAR(RL,4,4)
-      CALL CLEAR(RLL,4,4)
+C     CALL CLEAR(RL,4,4)
+C     CALL CLEAR(RLL,4,4)
 
       DO N=1,4
         ETA =XGP(N)
@@ -910,7 +912,7 @@ C     Constitutive tensor
         CALL MTRAN(AUXT,4,2,AUX)
         CALL MMULT(RLL,4,2,AUX,2,4,RL)
         AMATRX=AMATRX-RL*ALF*DETJAC
-        CALL CLEAR(RL,NDOFEL,NDOFEL)
+C       CALL CLEAR(RL,NDOFEL,NDOFEL)
       END DO
 
       CALL MAVEC(AMATRX,NDOFEL,NDOFEL,V,RHS)
@@ -965,7 +967,8 @@ C     Diagonalizes the mass matrix
       DO I=1,NDOFEL
         ANMASS(I)=2.0*(AMASS(I,I)/SMS)*SMT
       END DO
-      CALL CLEAR(AMASS,NDOFEL,NDOFEL)
+C     CALL CLEAR(AMASS,NDOFEL,NDOFEL)
+      AMASS=0.0D0
       DO I=1,NDOFEL
         AMASS(I,I)=ANMASS(I)
       END DO

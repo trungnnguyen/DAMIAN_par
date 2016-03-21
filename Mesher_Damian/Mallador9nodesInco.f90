@@ -82,7 +82,7 @@ INTEGER tclock1, tclock2, clock_rate
 call system_clock(tclock1)  ! start wall timer
 !
 !
-OPEN(10,FILE='Entrada/canonquad.msh')
+OPEN(10,FILE='gmesh_files/canonquad.msh')
 READ(10,*)
 READ(10,*)
 READ(10,*)
@@ -143,8 +143,8 @@ DO I=1, NP
     READ(10, '(2F12.8)') X(I), Y(I)
 END DO
 !
-X=X/10.0D0
-Y=Y/10.0D0
+! X=X/10.0D0
+! Y=Y/10.0D0
 !
 CLOSE(10, STATUS='DELETE')
 !
@@ -161,7 +161,7 @@ END DO
 !
 !NEL:NUMERO DE ELEMENTOS.
 !
-OPEN(10,FILE='Entrada/canonquad.msh')
+OPEN(10,FILE='gmesh_files/canonquad.msh')
 READ(10,*)
 READ(10,*)
 READ(10,*)
@@ -299,7 +299,7 @@ TP=TP+1     !AJUSTA EL TIPO DE ELEMENTO AL QUE NECESITA EL PROGRAMA DE FEM DE NO
 OPEN(10,FILE='../canon9.inp')
 !
 WRITE(10, '(1A20)') 'simple square mesh'
-WRITE(10, '(2I16, 1I6, 1F6.2, 7I6)') NP, ND, 9, 25.00D0, 50001, 2, 9, 18, 5, 1, 0
+WRITE(10, '(2I16, 1I6, 1F6.2, 7I6)') NP, ND, 9, 2.50D0, 5001, 2, 9, 18, 5, 1, 0
 !
 DO I=1, NP
 !
@@ -325,7 +325,7 @@ WRITE(10, '(3I4, 5F10.2, 1I4)') 9, 5, 1, 2.0D0, 1.0D0, 1.0D0, 0.0D0, 0.0D0, 8
 !5: AMPLITUD DE LA SEÑAL
 !6: ÁNGULO DE INCIDENCIA DE LA ONDA
 !
-WRITE(10, '(1I6, 5F8.4)') 1, 25.0D0, 10.15D0, 8.0D0, 1.0D0, 0.0D0
+WRITE(10, '(1I6, 5F8.4)') 1, 2.50D0, 1.00D0, 4.0D0, 1.0D0, 0.0D0
 !
 !
 DO I=1, NEL
@@ -333,20 +333,12 @@ DO I=1, NEL
     IF (MIE(1,I)==11) THEN
         WRITE(10,'(1I16, 4I8, 9I16)') I, INCO1(I,1), 18, 8, 9, MIE(1,I), MIE(2,I), &
                            MIE(3,I), MIE(4,I), MIE(5,I), MIE(6,I), &
-                           MIE(7,I), MIE(8,I), MIE(9,I)
-                           
-        WRITE(*,'(1I16, 4I8, 9I16)')I, INCO1(I,1), 18, 8, 9, MIE(1,I), MIE(2,I), &
-                           MIE(3,I), MIE(4,I), MIE(5,I), MIE(6,I), &
-                           MIE(7,I), MIE(8,I), MIE(9,I)
+                           MIE(7,I), MIE(8,I), MIE(9,I)                           
     ELSE
         IF (MIE(3,I)==8) THEN
             WRITE(10,'(1I16, 4I8, 9I16)') I, INCO1(I,1), 18, 6, 9, MIE(1,I), &
                    MIE(2,I), MIE(3,I), MIE(4,I), MIE(5,I), MIE(6,I), &
-                   MIE(7,I), MIE(8,I), MIE(9,I)
-                   
-            WRITE(*,'(1I16, 4I8, 9I16)')I, INCO1(I,1), 18, 8, 9,MIE(1,I),MIE(2,I),&
-                           MIE(3,I), MIE(4,I), MIE(5,I), MIE(6,I), &
-                           MIE(7,I), MIE(8,I), MIE(9,I)
+                   MIE(7,I), MIE(8,I), MIE(9,I)                   
         ELSE
             WRITE(10,'(1I16, 4I8, 9I16)') I, INCO1(I,1), 18, INCO1(I,2), 9, &
                    MIE(1,I), MIE(2,I), &

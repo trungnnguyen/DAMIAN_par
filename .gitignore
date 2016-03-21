@@ -1,0 +1,12 @@
+#Ignored files and folders
+
+*.dSYM
+*.o
+fort.*
+*.out
+*.vtk
+*.dat
+*.dis
+*.msh
+tempo
+

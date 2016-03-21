@@ -184,28 +184,30 @@ C     ID(,)     :Arrays with BC identifiers                            C
 C     IDPL      :Equation number where the load is applied             C
 C                                                                      C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C
-      SUBROUTINE POINTLOAD(NUMNP,NDOFDIM,NPL,ID,IDPL,IIN,IOUT)
-C
+
+      SUBROUTINE POINTLOAD(NUMNP,NDOFDIM,NPL,ID,IDPL,IIN,FILELOADS)
+
       IMPLICIT REAL*8 (A-H,O-Z)
-C
+      
+      CHARACTER*15 FILELOADS
+
       DIMENSION ID(NDOFDIM,NUMNP), IDPL(NPL)
-C
+
       IDPL=0
-C
+
       IF(NPL.NE.0)THEN
+
         DO I=1, NPL
-C
             READ(IIN,*) IDNOD, IDIR
             IDPL(I)=ID(IDIR,IDNOD)
-C
         END DO
+        
       END IF
-C
+
       RETURN
-C
+
       END
-C
+
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C                                                                      C
 C SUBROUTINE PLOADS                                                    C

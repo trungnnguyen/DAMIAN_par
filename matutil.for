@@ -51,7 +51,7 @@ C     Elasticity tensor.
 C
       DO K1=1, NDI
         DO K2=1, NDI
-          DDSDDE(K2, K1)=(VPS-2.0*VSS)*RO
+          DDSDDE(K2, K1)=(VPS-2.0D0*VSS)*RO
         END DO
         DDSDDE(K1, K1)=VPS*RO
       END DO

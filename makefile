@@ -10,7 +10,7 @@
 
 .SUFFIXES: .for
 
-FC=gfortran -g3 -ggdb -fbounds-check -fopenmp
+FC=gfortran -g3 -ggdb -fbounds-check -fopenmp -O3
 #LIBS=-lpthread
 FLAGS=
 FLAGS+=$(INCS) $(LIBS)
