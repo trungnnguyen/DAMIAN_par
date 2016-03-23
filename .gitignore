@@ -4,7 +4,7 @@
 *.o
 fort.*
 *.out
-*.vtk
+vtk/
 *.dat
 *.dis
 *.msh

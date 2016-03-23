@@ -1,9 +1,9 @@
-cl=.05;
-l=400;
-h=200;
-l1=190;
-l2=20.0;
-h1=10.0;
+cl=0.01;
+l =0.80;
+h =0.80;
+l1=0.30;
+l2=0.20;
+h1=0.20;
 
 Point(1) = {0, 0, 0, cl};
 Point(2) = {l1, 0, 0, cl};
@@ -64,9 +64,12 @@ Transfinite Surface {5} Alternated;
 Recombine Surface {5};
 
 Physical Surface(1000) = {1, 2, 3, 4, 5};
+//Physical Surface(1000) = {4, 5};
 
 Physical Line(1) = {8, 9, 10};
 Physical Line(2) = {11, 12, 6, 7};
+
+Physical Line(3) = {1, 2, 3, 4, 5};
 
 //Mesh.SecondOrderIncomplete = 1;
 

@@ -1,0 +1,15 @@
+La primer fila de materiales corresponde al semiespacio
+La segunda fila de materiales corresponde a los elementos del incoming
+Las demás filas, corresponden a los del dominio
+3
+Alfa Beta Rho 
+2.0  1.0  1.0
+2.0  1.0  1.0
+2.0  1.0  1.0
+
+Tipo de onda incidente 1: P, 2:SV
+2
+
+Datos generales en el dominio del tiempo
+Fc      Ttot    Tini    Nt      Ángulo Incidencia
+4.0     2.50    1.0     5001    0.0

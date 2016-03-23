@@ -49,7 +49,7 @@ C
       ALLOCATABLE ID(:,:),NDOFN(:),COORD(:,:),MATP(:),NMATP(:),NIMTP(:),
      1            AMATE(:,:),IMTEI(:,:),IELT(:),NNE(:),NDOFEL(:),
      2            IELCON(:,:),LM(:,:),ILIST(:,:),LPLIST(:,:),NIEL(:),
-     3            AG(:),VG(:),UTMINT(:),UT(:),UTMAST(:)
+     3            AG(:),VG(:),UTMINT(:),UT(:),UTMAST(:),ISTOUT(:)
 
       ALLOCATABLE IDPL(:)
 
@@ -95,15 +95,20 @@ C     READS PROBLEM DEFINITION PARAMETERS.
       WRITE(*,*)
 
       READ(IIN,     *) NUMNP,NUMEL,NUMAT,TM,NINCR,NDOFDIM,NMNE,NMDOFEL,
-     1                 NMPR,NIPR,NPL
+     1                 NMPR,NIPR,NPL,NIMP
      
       IF (NPL.NE.0) THEN
         OPEN(9999,FILE ='Loads.txt')
       END IF
+      
+      IF (NIMP.NE.0) THEN
+        ALLOCATE(ISTOUT(NIMP))
+        ISTOUT=0
+      END IF
 
       WRITE(IOUT,1900) HED
       WRITE(IOUT,2000) NUMNP,NUMEL,NUMAT,TM,NINCR,NDOFDIM,NMNE,NMDOFEL,
-     1                 NMPR,NIPR,NPL
+     1                 NMPR,NIPR,NPL,NIMP
 
       ALLOCATE(ID(NDOFDIM,NUMNP),NDOFN(NUMNP),COORD(NDOFDIM,NUMNP),
      1         MATP(NUMEL),NMATP(NUMAT),NIMTP(NUMAT),AMATE(NMPR,NUMAT),
@@ -163,9 +168,25 @@ C     READS MODEL
 
       CALL MATINP(NUMAT,NMPR,NMATP,AMATE,NIPR,NIMTP,IMTEI,AWAVE,IWAVE,
      1            IIN,IOUT)
+
       CALL ELEINP(NUMNP,NUMEL,NNE,IELT,NDOFEL,NMNE,MATP,IELCON,
      1              NUMPARA,IIN,IOUT)
       CALL POINTLOAD(NUMNP,NDOFDIM,NPL,ID,IDPL,IIN,FILELOADS)
+      CALL IMPHIST(NIMP,ISTOUT,IIN)
+
+C     EN ESTE BLOQUE IMPRIMO LAS COORDENADAS DE LOS PUNTOS EN LOS CUALES VOY A IMPRIMIR
+C     LAS HISTORIAS. SE IMPRIME COORDENADA X, COORDENADA Y
+
+      IF (NIMP.NE.0) THEN
+        OPEN(4444,FILE='CoordHistory.txt')
+        OPEN(5555,FILE='History.txt')
+
+        DO I=1, NIMP
+            J=ISTOUT(I)
+            WRITE(4444,'(2F11.6)') COORD(1,J), COORD(2,J)
+        END DO
+        CLOSE(4444)
+      END IF
 
 C$OMP END SECTIONS
 C$OMP END PARALLEL
@@ -249,31 +270,24 @@ C     INCREMENTATION BEGINS
 
         III=III+1
         IF (III==10) THEN
-
-            IF (NMNE==4) THEN
-                CALL VTK_4NODES(NUMNP, NUMPARA, NEQ, NDOFDIM, JJJ,
-     1                      COORD,IELCON(:,1:NUMPARA),ID,UTMAST)
-            END IF
-
-            IF (NMNE==8) THEN
-                CALL VTK_8NODES(NUMNP, NUMPARA, NEQ, NDOFDIM, JJJ,
-     1                      COORD,IELCON(:,1:NUMPARA),ID,UTMAST)
-            END IF
-
-            IF (NMNE==9) THEN
-                CALL VTK_9NODES(NUMNP, NUMPARA, NEQ, NDOFDIM, JJJ,
-     1                      COORD,IELCON(:,1:NUMPARA),ID,UTMAST)
-            END IF
-     
+            CALL ESCVTK(NMNE,NUMNP,NUMPARA,NEQ,NDOFDIM,JJJ,COORD,
+     1                  IELCON,ID,NUMEL,UTMAST)
             JJJ=JJJ+1
             III=0
+        END IF
 
+        IF (NIMP.NE.0) THEN
+            CALL IMPISTOUT(NIMP,ISTOUT,NEQ,NDOFDIM,NUMNP,ID,UTMAST)
         END IF
 
       END DO
 
       WRITE(*,3050), FILENAME
       
+      IF (NIMP.NE.0)THEN
+        CLOSE(5555)
+      END IF
+
       IF (NPL.NE.0) THEN
         CLOSE(9999)
       END IF

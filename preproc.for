@@ -239,6 +239,27 @@ C
 C
       END
 C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                                                                      C
+C SUBROUTINE IMPHIST                                                   C
+C                                                                      C
+C                                                                      C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+
+      SUBROUTINE IMPHIST(NIMP,ISTOUT,IIN)
+
+      IMPLICIT REAL*8 (A-H,O-Z)
+
+      DIMENSION ISTOUT(NIMP)
+
+      DO I=1, NIMP
+        READ(IIN,*) ISTOUT(I)
+      END DO
+
+      RETURN
+
+      END
+
 C11111111122222222223333333333444444444455555555556666666666777777777777
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C                                                                      C

@@ -1,7 +1,33 @@
 C      MODULE POSTPROC
 C      CONTAINS
 
-C
+      SUBROUTINE ESCVTK(NMNE,NUMNP,NUMPARA,NEQ,NDOFDIM,JJJ,COORD,
+     1                  IELCON,ID,NUMEL,UTMAST)
+
+      IMPLICIT REAL*8(A-H,O-Z)
+
+      DIMENSION ID(NDOFDIM,NUMNP),COORD(NDOFDIM,NUMNP),
+     1          IELCON(NMNE,NUMEL),UTMAST(NEQ)
+      
+      IF (NMNE==4) THEN
+        CALL VTK_4NODES(NUMNP, NUMPARA, NEQ, NDOFDIM, JJJ,
+     1                  COORD,IELCON(:,1:NUMPARA),ID,UTMAST)
+      END IF
+
+      IF (NMNE==8) THEN
+        CALL VTK_8NODES(NUMNP, NUMPARA, NEQ, NDOFDIM, JJJ,
+     1                  COORD,IELCON(:,1:NUMPARA),ID,UTMAST)
+      END IF
+
+      IF (NMNE==9) THEN
+        CALL VTK_9NODES(NUMNP, NUMPARA, NEQ, NDOFDIM, JJJ,
+     1                  COORD,IELCON(:,1:NUMPARA),ID,UTMAST)
+      END IF
+
+      RETURN
+      
+      END SUBROUTINE
+
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C              PROGRAMA PARA GENERAR ARCHIVOS PARA PARAVIEW                   C
@@ -103,7 +129,7 @@ C
         DESPY=UT(J,2)
 C
 C    WRITE(70,'(3F10.6)') COORD(1, J)+DESPX/10.0D0, COORD(2, J)+DESPY/10.0D0, 0.0D0
-        WRITE(70,'(3F10.6)') COORD(1, J), COORD(2, J), 0.0D0
+        WRITE(70,'(3F11.6)') COORD(1, J), COORD(2, J), 0.0D0
 C
       END DO
 C
@@ -117,7 +143,7 @@ C
 C
       DO J=1, NELE
 C
-        WRITE(70,'(1I2, 4I9)') 4, MIE(3,J)-1, MIE(4,J)-1, 
+        WRITE(70,'(1I2, 4I8)') 4, MIE(3,J)-1, MIE(4,J)-1, 
      1                             MIE(2,J)-1, MIE(1, J)-1
 C
       END DO
@@ -135,7 +161,7 @@ C
 C
         DESPX=DSQRT(UT(J,1)**2+UT(J,2)**2)
 
-        WRITE(70,'(1F10.6)') DESPX
+        WRITE(70,'(1F11.6)') DESPX
 C
       END DO
 C
@@ -226,7 +252,7 @@ C
 
 c        WRITE(70,'(3F10.6)') COORD(1, J)+DESPX/10.0D0, 
 c     1                       COORD(2, J)+DESPY/10.0D0, 0.0D0
-        WRITE(70,'(3F12.6)') COORD(1, J), COORD(2, J), 0.0D0
+        WRITE(70,'(3F11.6)') COORD(1, J), COORD(2, J), 0.0D0
 
       END DO
 
@@ -235,7 +261,7 @@ c     1                       COORD(2, J)+DESPY/10.0D0, 0.0D0
       WRITE(70,*) "CELLS", NELE, NELE*9
 
       DO I=1,NELE
-        WRITE(70,'(1I3,8I9)') 8, MIE(:,I)-1
+        WRITE(70,'(1I3,8I8)') 8, MIE(:,I)-1
       END DO
       WRITE(70,*) ""
 
@@ -260,7 +286,7 @@ cc      END DO
 C
         DESPX=DSQRT(UT(J,1)**2+UT(J,2)**2)
 
-        WRITE(70,'(1F10.6)') DESPX
+        WRITE(70,'(1F11.6)') DESPX
 C
       END DO
 
@@ -351,7 +377,7 @@ C
 
 c        WRITE(70,'(3F10.6)') COORD(1, J)+DESPX/10.0D0, 
 c     1                       COORD(2, J)+DESPY/10.0D0, 0.0D0
-        WRITE(70,'(3F12.6)') COORD(1, J), COORD(2, J), 0.0D0
+        WRITE(70,'(3F11.6)') COORD(1, J), COORD(2, J), 0.0D0
 
       END DO
 
@@ -360,7 +386,7 @@ c     1                       COORD(2, J)+DESPY/10.0D0, 0.0D0
       WRITE(70,*) "CELLS", NELE, NELE*10
 
       DO I=1,NELE
-        WRITE(70,'(1I3,9I9)') 9, MIE(:,I)-1
+        WRITE(70,'(1I3,9I8)') 9, MIE(:,I)-1
       END DO
       WRITE(70,*) ""
 
@@ -385,7 +411,7 @@ cc      END DO
 C
         DESPX=DSQRT(UT(J,1)**2+UT(J,2)**2)
 
-        WRITE(70,'(1F10.6)') DESPX
+        WRITE(70,'(1F11.6)') DESPX
 C
       END DO
 
@@ -396,5 +422,100 @@ C
 C
 C
       END SUBROUTINE
-C
+
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+
+      SUBROUTINE IMPISTOUT(NIMP,ISTOUT,NEQ,NDOFDIM,NUMNP,ID,UTMAST)
+
+      IMPLICIT REAL*8(A-H,O-Z)
+      
+      DIMENSION ID(NDOFDIM,NUMNP),ISTOUT(NIMP),UTMAST(NEQ)
+
+C     OJO QUE ACÁ ESTÁ AMARRADO A 2 GRADOS DE LIBERTAD POR NODO
+
+      UX=0.0D0
+      UY=0.0D0
+
+      DO I=1, NIMP
+        J=ISTOUT(I)
+        II=ID(1,J)
+        JJ=ID(2,J)
+
+        IF (II.NE.0) THEN
+            UX=UTMAST(II)
+        END IF
+
+        IF (JJ.NE.0) THEN
+            UY=UTMAST(JJ)
+        END IF
+
+        WRITE(5555,'(2F11.6)') UX, UY
+        UX=0.0D0
+        UY=0.0D0
+
+      END DO
+
+      RETURN
+
+      END SUBROUTINE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 c        END MODULE POSTPROC
