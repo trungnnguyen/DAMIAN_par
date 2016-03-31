@@ -155,7 +155,7 @@ C
         READ(IIN,*) M,IELT(M),NDOFEL(M),MATP(M),NNE(M),
      1  (IELCON(J,M),J=1,NNE(M))
      
-        IF(IELT(I).NE.7) THEN
+        IF(IELT(I).NE.7 .OR. IELT(I).NE.8) THEN
             NUMPARA=NUMPARA+1
         END IF
         
@@ -400,6 +400,98 @@ cc        WRITE(*,'(2F10.6)') DT*KINC, PP
 C
       RETURN
 C
+      END
+
+
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                                                                      C
+C     SUBROUTINE UPULSED(Rick,SRick,Nf,Tmax,fc,Tini)                   C
+C     DISPLACEMENT FIELD DUE TO A RICKER PULSE                         C
+C                                                                      C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+
+      SUBROUTINE UPULSED(PPD,NT,DT,AWAVE,KINC)
+
+      IMPLICIT REAL*8(A-H,O-Z)
+
+      DIMENSION AWAVE(5)
+
+      PARAMETER (HALF=0.5D0,TWO=2.0D0)
+
+      PI=4.0D00*DATAN(1.0D0)
+
+      Tmax=AWAVE(1)
+      Tini=AWAVE(2)
+      fc=AWAVE(3)
+C     AMP=AWAVE(4)
+
+      tao=PI*fc*(DT*(KINC-1)-Tini)
+      PPD=(2.0D0*tao**2-1.0D0)*DEXP(-tao**2)
+
+      RETURN
+
+      END
+
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                                                                      C
+C     SUBROUTINE UPULSEV(Rick,SRick,Nf,Tmax,fc,Tini)                   C
+C     VELOCITY FIELD DUE TO A RICKER PULSE                             C
+C                                                                      C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+
+      SUBROUTINE UPULSEV(PPV,NT,DT,AWAVE,KINC)
+
+      IMPLICIT REAL*8(A-H,O-Z)
+
+      DIMENSION AWAVE(5)
+
+      PARAMETER (HALF=0.5D0,TWO=2.0D0)
+
+      PI=4.0D00*DATAN(1.0D0)
+
+      Tmax=AWAVE(1)
+      Tini=AWAVE(2)
+      fc=AWAVE(3)
+C     AMP=AWAVE(4)
+
+      tao=PI*fc*(DT*(KINC-1)-Tini)
+
+      PPV=2.0D0*(PI*fc)**2*(DT*(KINC-1)-Tini)*(3.0D0-2.0D0*tao**2)
+     1    *DEXP(-tao**2)
+
+      RETURN
+
+      END
+      
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                                                                      C
+C     SUBROUTINE UPULSEA(Rick,SRick,Nf,Tmax,fc,Tini)                   C
+C     ACELERATION FIELD DUE TO A RICKER PULSE                          C
+C                                                                      C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+
+      SUBROUTINE UPULSEA(PPA,NT,DT,AWAVE,KINC)
+
+      IMPLICIT REAL*8(A-H,O-Z)
+
+      DIMENSION AWAVE(5)
+
+      PARAMETER (HALF=0.5D0,TWO=2.0D0)
+
+      PI=4.0D00*DATAN(1.0D0)
+
+      Tmax=AWAVE(1)
+      Tini=AWAVE(2)
+      fc=AWAVE(3)
+C     AMP=AWAVE(4)
+
+      tao=PI*fc*(DT*(KINC-1)-Tini)
+
+      PPA=2.0D0*(PI*fc)**2*(3.0D0-12.0D0*tao**2+4.0D0*tao**4)
+     1   *DEXP(-tao**2)
+
+      RETURN
+
       END
 C
 C      END MODULE PREPROC

@@ -244,6 +244,11 @@ C
      1                  AWAVE,IWAVE,ELCOOR,MXDOFDIM,NN,UL,DUL,VL,
      2                  AL,IE,DT,KINC,NINCR)
 
+          CASE (8)
+          CALL UELDASHINC(R,SM,2*NN,PROPS,NPROPS,IPROPS,NIPROPS,
+     1                    AWAVE,IWAVE,ELCOOR,MXDOFDIM,NN,UL,DUL,VL,
+     2                    AL,IE,DT,KINC,NINCR)
+
         END SELECT
 
 C       RETRIEVES EQN NUMBER AT THE CURRENT NODE OF THE
@@ -613,6 +618,7 @@ C     INTEGER ARRAYS
         NN=NNE(IE)
         NPROPS =NMATP(MATP(IE))
         NIPROPS=NIMTP(MATP(IE))
+        PPV=0.0D0
         ALLOCATE(R(ND),SM(ND),UL(ND),DUL(ND),VL(ND),AL(ND))
         CALL CLEARV(SM,ND)
         CALL CLEARV(UL,ND)
@@ -696,6 +702,11 @@ C
           CALL UELEDASH3(R,SM,ND,PROPS,NPROPS,IPROPS,NIPROPS,
      1                  AWAVE,IWAVE,ELCOOR,MXDOFDIM,NN,UL,DUL,VL,
      2                  AL,IE,DT,KINC,NINCR)
+
+          CASE (8)
+          CALL UELDASHINC(R,SM,2*NN,PROPS,NPROPS,IPROPS,NIPROPS,
+     1                    AWAVE,IWAVE,ELCOOR,MXDOFDIM,NN,UL,DUL,VL,
+     2                    AL,IE,DT,KINC,NINCR)
 
         END SELECT
 
